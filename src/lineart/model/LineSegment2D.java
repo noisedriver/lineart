@@ -1,5 +1,7 @@
 package lineart.model;
 
+import java.util.Objects;
+
 /**
  *
  * @author noisedriver
@@ -10,7 +12,7 @@ public class LineSegment2D {
     private final Point2D point2;
     
     public LineSegment2D(Point2D point1, Point2D point2) {
-        // TODO : assert ordering point1 < point2
+        // TODO : assert ordering point1 < point2 ?
         this.point1 = point1;
         this.point2 = point2;
     }
@@ -25,7 +27,7 @@ public class LineSegment2D {
     
     public Rectangle getBoundingBox() {
         // note : no area if colinear...
-        return new Rectangle(this.point2.x - this.point1.x, this.point2.y - this.point1.y, point1);
+        return new Rectangle(this);
     }
     
     // https://stackoverflow.com/questions/16314069/calculation-of-intersections-between-line-segments
@@ -60,6 +62,40 @@ public class LineSegment2D {
     }
     
     public ILine2D asLine() {
-        return new Line2D(this.point1, new Point2D(this.point2.x - this.point1.x, this.point2.y - this.point1.y));
+        return new Line2D(new Point2D(this.point2.x - this.point1.x, this.point2.y - this.point1.y), this.point1);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 89 * hash + Objects.hashCode(this.point1);
+        hash = 89 * hash + Objects.hashCode(this.point2);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final LineSegment2D other = (LineSegment2D) obj;
+        if (!Objects.equals(this.point1, other.point1)) {
+            return false;
+        }
+        if (!Objects.equals(this.point2, other.point2)) {
+            return false;
+        }
+        return true;
+    }
+    
+    @Override
+    public String toString() {
+        return "LineSegment2D{" + "point1=" + point1 + ", point2=" + point2 + '}';
     }
 }

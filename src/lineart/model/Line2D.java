@@ -69,7 +69,7 @@ public class Line2D implements ILine2D {
         //      y = c (b + d) / (a - c) + d
         //
         // x' = (d+b)/(a-c); y' = c(x') + d
-        double x = (d + b) / (a - c);
+        double x = (d - b) / (a - c);
         double y = a * x + b;
         
         return new Point2D(x,y);
@@ -77,7 +77,7 @@ public class Line2D implements ILine2D {
     
     @Override
     public boolean isOnLine(Point2D point) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return this.relativePosition(point) == Position.HIT;
     }
     
     @Override
@@ -105,9 +105,11 @@ public class Line2D implements ILine2D {
         //     / |(0,0)       |(x,0)
         //    /  |            |
         
+        // parallel vertical lines...
         if (this.displacement.x == 0) // any Y value if origin.x == x...
             return (this.origin.x == x) ? new Point2D(x,0) : null;
         
+        // orthogonal lines
         if (this.displacement.y == 0)
             return new Point2D(x, this.origin.y);
         
@@ -118,14 +120,16 @@ public class Line2D implements ILine2D {
 
     @Override
     public Point2D getPointForY(double y) {
-        if (this.displacement.x == 0) // any Y value if origin.x == x...
+        // calculating intersection with y = y'
+        
+        if (this.displacement.x == 0) // vertical line, so easy (x',y')
             return new Point2D(this.origin.x, y);
         
-        if (this.displacement.y == 0)
+        if (this.displacement.y == 0) // parallel lines...
             return (this.origin.y == y) ? new Point2D(0,y) : null;
         
         double a = displacement.y/displacement.x;
-        double x = origin.x + y / a;
+        double x = origin.x + (y - origin.y) / a;
         return new Point2D(x, y);
     }
 

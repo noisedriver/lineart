@@ -6,5 +6,5 @@ package lineart.model;
  * @author noisedriver
  */
 public enum Position {
-    RIGHT, LEFT, HIT
+    RIGHT, LEFT, HIT;
 }

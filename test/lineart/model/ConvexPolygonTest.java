@@ -1,10 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package lineart.model;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import org.junit.Test;
@@ -22,27 +18,33 @@ public class ConvexPolygonTest {
     @Test
     public void testContains() {
         System.out.println("contains");
-        Point2D point = null;
-        ConvexPolygon instance = null;
-        boolean expResult = false;
-        boolean result = instance.contains(point);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of iterator method, of class ConvexPolygon.
-     */
-    @Test
-    public void testIterator() {
-        System.out.println("iterator");
-        ConvexPolygon instance = null;
-        Iterator<Point2D> expResult = null;
-        Iterator<Point2D> result = instance.iterator();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        {
+            Point2D point = new Point2D();
+            ConvexPolygon instance = new ConvexPolygon(
+                new Point2D(-1, -1),
+                new Point2D( 1, -1),
+                new Point2D( 1,  1),
+                new Point2D(-1,  1)
+            );
+            boolean expResult = true;
+            boolean result = instance.contains(point);
+            assertEquals(expResult, result);
+        }
+        
+        {
+            Point2D point = new Point2D(10,7);
+            ConvexPolygon instance = new ConvexPolygon(
+                new Point2D(-1, -1),
+                new Point2D( 1, -1),
+                new Point2D( 1,  2),
+                new Point2D(-1,  2),
+                new Point2D(-2,  1)
+            );
+            boolean expResult = false;
+            boolean result = instance.contains(point);
+            assertEquals(expResult, result);
+        }
     }
 
     /**
@@ -51,13 +53,18 @@ public class ConvexPolygonTest {
     @Test
     public void testGetPoint() {
         System.out.println("getPoint");
-        int index = 0;
-        ConvexPolygon instance = null;
-        Point2D expResult = null;
+        
+        ConvexPolygon instance = new ConvexPolygon(
+                new Point2D(-1, -1),
+                new Point2D( 1, -1),
+                new Point2D( 1,  2),
+                new Point2D(-1,  2),
+                new Point2D(-2,  1)
+            );
+        Point2D expResult = new Point2D(1,2);
+        int index = 2;
         Point2D result = instance.getPoint(index);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -66,12 +73,20 @@ public class ConvexPolygonTest {
     @Test
     public void testGetEdges() {
         System.out.println("getEdges");
-        ConvexPolygon instance = null;
-        List<LineSegment2D> expResult = null;
+        
+        ConvexPolygon instance = new ConvexPolygon(
+            new Point2D(-1, -1),
+            new Point2D( 1, -1),
+            new Point2D( 1,  2),
+            new Point2D(-1,  2),
+            new Point2D(-2,  1)
+        );
         List<LineSegment2D> result = instance.getEdges();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(new LineSegment2D(new Point2D(-1, -1), new Point2D( 1, -1)), result.get(0));
+        assertEquals(new LineSegment2D(new Point2D( 1, -1), new Point2D( 1,  2)), result.get(1));
+        assertEquals(new LineSegment2D(new Point2D( 1,  2), new Point2D(-1,  2)), result.get(2));
+        assertEquals(new LineSegment2D(new Point2D(-1,  2), new Point2D(-2,  1)), result.get(3));
+        assertEquals(new LineSegment2D(new Point2D(-2,  1), new Point2D(-1, -1)), result.get(4));
     }
 
     /**
@@ -80,13 +95,44 @@ public class ConvexPolygonTest {
     @Test
     public void testSplit() {
         System.out.println("split");
-        ILine2D line = null;
-        ConvexPolygon instance = null;
-        ConvexPolygon expResult = null;
+        
+        ConvexPolygon instance = new ConvexPolygon(
+            new Point2D(-2, -2),
+            new Point2D( 2, -2),
+            new Point2D( 2,  2),
+            new Point2D(-2,  2)
+        );
+        
+        //              ^ y  /
+        //              |   /   (2,2)
+        //      +-------|--/----+
+        //      |       | /     |
+        //      |       |/      |        x
+        //   -----------+--------------->
+        //      |      /|       |
+        //      |     / |       |
+        //      +----/--|-------+
+        //          /   |
+        
+        ILine2D line = new Line2D(new Point2D(1, 2), new Point2D(0, 0));
+        
+        ConvexPolygon expResultA = new ConvexPolygon(
+            new Point2D(-2, -2),
+            new Point2D(-1, -2),
+            new Point2D( 1,  2),
+            new Point2D(-2,  2)
+        );
+        
+        ConvexPolygon expResultB = new ConvexPolygon(
+            new Point2D(-1, -2),
+            new Point2D( 2, -2),
+            new Point2D( 2,  2),
+            new Point2D( 1,  2)
+        );
+        
         ConvexPolygon result = instance.split(line);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(expResultA, instance);
+        assertEquals(expResultB, result);
     }
 
     /**
@@ -95,13 +141,18 @@ public class ConvexPolygonTest {
     @Test
     public void testIntersects() {
         System.out.println("intersects");
-        ILine2D line = null;
-        ConvexPolygon instance = null;
-        boolean expResult = false;
+        
+        ConvexPolygon instance = new ConvexPolygon(
+            new Point2D(-1, -1),
+            new Point2D( 1, -1),
+            new Point2D( 1,  2),
+            new Point2D(-1,  2),
+            new Point2D(-2,  1)
+        );
+        
+        Line2D line = new Line2D(new Point2D(1,1), new Point2D(0,0));
+        boolean expResult = true;
         boolean result = instance.intersects(line);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
-    
 }

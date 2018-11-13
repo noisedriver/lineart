@@ -50,14 +50,18 @@ public class Line2DTest {
     @Test
     public void testIsOnLine() {
         System.out.println("isOnLine");
-        /*
-        Point2D point = null;
-        Line2D instance = null;
-        boolean expResult = false;
-        boolean result = instance.isOnLine(point);
-        assertEquals(expResult, result);
-        fail("The test case is a prototype.");
-        */
+        
+        Line2D instance = new Line2D(new Point2D(5, 1), new Point2D(0, -1));
+        
+        Point2D p1 = new Point2D(-5,-5);
+        boolean expResult1 = false;
+        boolean result1 = instance.isOnLine(p1);
+        assertEquals(expResult1, result1);
+        
+        Point2D p2 = new Point2D(10,1);
+        boolean expResult2 = true;
+        boolean result2 = instance.isOnLine(p2);
+        assertEquals(expResult2, result2);
     }
 
     /**
@@ -66,13 +70,11 @@ public class Line2DTest {
     @Test
     public void testGetOrigin() {
         System.out.println("getOrigin");
-        /*
-        Line2D instance = null;
-        Point2D expResult = null;
+        
+        Line2D instance = new Line2D(new Point2D(1, 1), new Point2D(0, 0));
+        Point2D expResult = new Point2D(0, 0);
         Point2D result = instance.getOrigin();
         assertEquals(expResult, result);
-        fail("The test case is a prototype.");
-        */
     }
 
     /**
@@ -81,13 +83,11 @@ public class Line2DTest {
     @Test
     public void testGetDisplacement() {
         System.out.println("getDisplacement");
-        /*
-        Line2D instance = null;
-        Point2D expResult = null;
+        
+        Line2D instance = new Line2D(new Point2D(1, 1), new Point2D(0, 0));
+        Point2D expResult = new Point2D(1, 1);
         Point2D result = instance.getDisplacement();
         assertEquals(expResult, result);
-        fail("The test case is a prototype.");
-        */
     }
 
     /**
@@ -96,14 +96,46 @@ public class Line2DTest {
     @Test
     public void testGetPointForX() {
         System.out.println("getPointForX");
-        /*
-        double x = 0.0;
-        Line2D instance = null;
-        Point2D expResult = null;
-        Point2D result = instance.getPointForX(x);
-        assertEquals(expResult, result);
-        fail("The test case is a prototype.");
-        */
+        
+        {
+            Line2D instance = new Line2D(new Point2D(1, 1), new Point2D(0, 0));
+
+            double x1 = 0.0;
+            Point2D expResult1 = new Point2D(0, 0);
+            Point2D result1 = instance.getPointForX(x1);
+            assertEquals(expResult1, result1);
+
+            double x2 = 5.0;
+            Point2D expResult2 = new Point2D(5, 5);
+            Point2D result2 = instance.getPointForX(x2);
+            assertEquals(expResult2, result2);
+
+            double x3 = 3.5;
+            Point2D expResult3 = new Point2D(3.5, 3.5);
+            Point2D result3 = instance.getPointForX(x3);
+            assertEquals(expResult3, result3);
+        }
+        
+        {
+            Line2D instance = new Line2D(new Point2D(1, 2.5), new Point2D(0, 5));
+
+            double x1 = 2.0;
+            Point2D expResult1 = new Point2D(2, 5 + 5);
+            Point2D result1 = instance.getPointForX(x1);
+            assertEquals(expResult1, result1);
+
+            double x2 = 5.0;
+            Point2D expResult2 = new Point2D(5, 12.5 + 5);
+            Point2D result2 = instance.getPointForX(x2);
+            assertEquals(expResult2, result2);
+
+            double x3 = -1;
+            Point2D expResult3 = new Point2D(-1, -2.5 + 5);
+            Point2D result3 = instance.getPointForX(x3);
+            assertEquals(expResult3, result3);
+        }
+        
+        // TODO test edge cases x = d; y = b;
     }
 
     /**
@@ -112,14 +144,53 @@ public class Line2DTest {
     @Test
     public void testGetPointForY() {
         System.out.println("getPointForY");
-        /*
-        double y = 0.0;
-        Line2D instance = null;
-        Point2D expResult = null;
-        Point2D result = instance.getPointForY(y);
-        assertEquals(expResult, result);
-        fail("The test case is a prototype.");
-        */
+        {
+            Line2D instance = new Line2D(new Point2D(1, 1), new Point2D(0, 0));
+
+            double y1 = 0.0;
+            Point2D expResult1 = new Point2D(0, 0);
+            Point2D result1 = instance.getPointForY(y1);
+            assertEquals(expResult1, result1);
+
+            double y2 = 5.0;
+            Point2D expResult2 = new Point2D(5, 5);
+            Point2D result2 = instance.getPointForY(y2);
+            assertEquals(expResult2, result2);
+
+            double y3 = 3.5;
+            Point2D expResult3 = new Point2D(3.5, 3.5);
+            Point2D result3 = instance.getPointForY(y3);
+            assertEquals(expResult3, result3);
+        }
+        
+        {
+            //       |    /
+            //       |   /        
+            //       |  / y=ax+b
+            //       | /
+            //       |/
+            //     b-|            
+            //  ----/+-----------------------------
+            //     / |(0,0)       
+            //    /  |            
+            
+            Line2D instance = new Line2D(new Point2D(5, 1), new Point2D(0, -1));
+            
+            double y1 = 0.0;
+            Point2D result1 = instance.getPointForY(y1);
+            Point2D expResult1 = new Point2D(5, 0);
+            assertEquals(expResult1, result1);
+
+            double y2 = 5.0; // (5 + 1) * 5 = 30
+            Point2D expResult2 = new Point2D(30, 5);
+            Point2D result2 = instance.getPointForY(y2);
+            assertEquals(expResult2, result2);
+
+            double y3 = 7.5; // (7.5 + 1) * 5 = 42.5
+            Point2D expResult3 = new Point2D(42.5, 7.5);
+            Point2D result3 = instance.getPointForY(y3);
+            assertEquals(expResult3, result3);
+        }
     }
 
     /**
@@ -128,14 +199,22 @@ public class Line2DTest {
     @Test
     public void testRelativePosition() {
         System.out.println("relativePosition");
-        /*
-        Point2D p0 = null;
-        Line2D instance = null;
-        Position expResult = null;
-        Position result = instance.relativePosition(p0);
-        assertEquals(expResult, result);
-        fail("The test case is a prototype.");
-        */
+        
+        Line2D instance = new Line2D(new Point2D(5, 1), new Point2D(0, -1));
+        
+        Point2D p0 = new Point2D();
+        Position expResult0 = Position.LEFT;
+        Position result0 = instance.relativePosition(p0);
+        assertEquals(expResult0, result0);
+        
+        Point2D p1 = new Point2D(-5,-5);
+        Position expResult1 = Position.RIGHT;
+        Position result1 = instance.relativePosition(p1);
+        assertEquals(expResult1, result1);
+        
+        Point2D p2 = new Point2D(10,1);
+        Position expResult2 = Position.HIT;
+        Position result2 = instance.relativePosition(p2);
+        assertEquals(expResult2, result2);
     }
-    
 }

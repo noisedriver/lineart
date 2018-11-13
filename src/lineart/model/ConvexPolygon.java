@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -68,6 +69,14 @@ public class ConvexPolygon implements Iterable<Point2D> {
         return this.points.get(i);
     }
     
+    /**
+     * @param index
+     * @return 
+     */
+    public LineSegment2D getEdge(int index) {
+        return new LineSegment2D(this.getPoint(index), this.getPoint(index + 1));
+    }
+    
     public List<LineSegment2D> getEdges() {
         List<LineSegment2D> edges = new LinkedList<>();
         int N = this.points.size();
@@ -97,6 +106,8 @@ public class ConvexPolygon implements Iterable<Point2D> {
         LinkedList<Point2D> polygon2 = new LinkedList<>();
         boolean polygon1_active = true;
         int splits = 0;
+        // Polygon to ordered sequence of edges...
+        Collection<LineSegment2D> edges = getEdges();
         
         // Walk through the edges;
         // For each edge, test if there is an intersection
@@ -108,28 +119,29 @@ public class ConvexPolygon implements Iterable<Point2D> {
         // ELSE
         //      keep adding to the current stack and test the next edge for an
         //      intersection...
-        for (LineSegment2D edge : getEdges()) {
+        for (LineSegment2D edge : edges) {
+            
+            if (polygon1_active)
+                polygon1.add(edge.getPoint1());
+            else
+                polygon2.add(edge.getPoint1());
+            
             Point2D p = edge.getIntersection(line);
-            if (p == null) {
-                if (polygon1_active)
-                    polygon1.add(edge.getPoint2());
-                else
-                    polygon2.add(edge.getPoint2());
-            } else {
+            if (p != null) {
                 polygon1_active = !polygon1_active;
                 splits++;
-                if (polygon1_active) {
-                    polygon1.add(p);
+                polygon1.add(p); // add case for when p == point1 or point2?
+                polygon2.add(p);
+                /*if (polygon1_active) {
                     polygon1.add(edge.getPoint2());
                 } else {
-                    polygon2.add(p);
                     polygon2.add(edge.getPoint2());
-                }
+                }*/
             }
         }
         
         // Only split the convex polygon 
-        if (splits != 2)
+        if (splits != 2) // for non-convex, mod 2 can be used?
             return null;
         
         this.points.clear();
@@ -144,4 +156,37 @@ public class ConvexPolygon implements Iterable<Point2D> {
     public boolean intersects(ILine2D line) {
         return getEdges().stream().anyMatch((edge) -> (edge.getIntersection(line) != null));
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        for (Point2D p : this)
+            hash = 83 * hash + Objects.hashCode(p);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ConvexPolygon other = (ConvexPolygon) obj;
+        for (Point2D p : this)
+            if (other.hasPoint(p)) return true;
+        return false;
+    }
+
+    public boolean hasPoint(Point2D point) {
+        for (Point2D p : this)
+            if (p.equals(point)) return true;
+        return false;
+    }
+    
+    
 }
