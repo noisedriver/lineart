@@ -1,5 +1,6 @@
 package lineart.model;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,8 +20,17 @@ public class ConvexPolygon implements Iterable<Point2D> {
         
         this.points = new LinkedList<>();
         for (int i = 0; i < points.length; ++i) {
+            // TODO : add check for each point if the new figure is convex !!!!!
             this.points.add(points[i]);
         }
+    }
+    
+    public ConvexPolygon(Collection<Point2D> points) {
+        if (points.size() < 3)
+            throw new IllegalArgumentException("A polygon requires at least 3 non-linear points...");
+        //if (points.length == 3) ...
+        
+        this.points = new LinkedList<>(points);
     }
     
     /**
@@ -60,11 +70,11 @@ public class ConvexPolygon implements Iterable<Point2D> {
     
     public List<LineSegment2D> getEdges() {
         List<LineSegment2D> edges = new LinkedList<>();
-        int i = 0, j = 1;
-        for (; i < this.points.size() - 1; i++, j++) {
-            edges.add(new LineSegment2D(this.points.get(i), this.points.get(j)));
+        int N = this.points.size();
+        for (int i = 0; i < N - 1; i++) {
+            edges.add(new LineSegment2D(this.points.get(i), this.points.get(i + 1)));
         }
-        edges.add(new LineSegment2D(this.points.get(i), this.points.get(0)));
+        edges.add(new LineSegment2D(this.points.get(N - 1), this.points.get(0)));
         return edges;
     }
     
@@ -82,9 +92,52 @@ public class ConvexPolygon implements Iterable<Point2D> {
      */
     public ConvexPolygon split(ILine2D line) {
         ConvexPolygon c = null;
+        
+        LinkedList<Point2D> polygon1 = new LinkedList<>();
+        LinkedList<Point2D> polygon2 = new LinkedList<>();
+        boolean polygon1_active = true;
+        int splits = 0;
+        
+        // Walk through the edges;
+        // For each edge, test if there is an intersection
+        // IF there is an intersection:
+        //      split the edge into two parts;
+        //      add the first part to the current stack
+        //      add the second part to the other stack
+        //      the other stack now becomes the "current" stack and continue...
+        // ELSE
+        //      keep adding to the current stack and test the next edge for an
+        //      intersection...
         for (LineSegment2D edge : getEdges()) {
-            throw new UnsupportedOperationException("Not supported yet.");
+            Point2D p = edge.getIntersection(line);
+            if (p == null) {
+                if (polygon1_active)
+                    polygon1.add(edge.getPoint2());
+                else
+                    polygon2.add(edge.getPoint2());
+            } else {
+                polygon1_active = !polygon1_active;
+                splits++;
+                if (polygon1_active) {
+                    polygon1.add(p);
+                    polygon1.add(edge.getPoint2());
+                } else {
+                    polygon2.add(p);
+                    polygon2.add(edge.getPoint2());
+                }
+            }
         }
+        
+        // Only split the convex polygon 
+        if (splits != 2)
+            return null;
+        
+        this.points.clear();
+        this.points.addAll(polygon1);
+        
+        if (! polygon2.isEmpty() && polygon2.size() > 2)
+            c = new ConvexPolygon(polygon2);
+        
         return c;
     }
 

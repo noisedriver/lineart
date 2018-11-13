@@ -2,7 +2,7 @@ package lineart.model;
 
 /**
  *
- * @author Joris
+ * @author noisedriver
  */
 public class Area {
     
@@ -53,7 +53,6 @@ public class Area {
     public Position relativePosition(ILine2D line) {
         if (this.convex.intersects(line))
             return Position.HIT;
-        Position p = Position.LEFT;
         // We only need to check for 1 point, as we have already ruled out that
         // the line intersects with the area...
         Point2D p0 = this.convex.getPoint(0);

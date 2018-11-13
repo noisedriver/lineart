@@ -8,9 +8,10 @@ import lineart.model.Canvas;
 import lineart.model.Line2D;
 import lineart.model.Point2D;
 
+
 /**
  *
- * @author Joris
+ * @author noisedriver
  */
 public class Main {
     
@@ -24,7 +25,7 @@ public class Main {
         final int WIDTH = 1024, HEIGHT = 1024, LINE_WIDTH = 5;
         
         Canvas canvas = new Canvas(WIDTH, HEIGHT, LINE_WIDTH);
-        canvas.addLine(new Line2D(new Point2D(0, 50)));
+        canvas.addLine(new Line2D(new Point2D(50, 100)));
         
         try {
             BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_BYTE_INDEXED);

@@ -1,12 +1,11 @@
 package lineart.model;
 
+import java.util.Objects;
 
-//import java.awt.Point;
-//import java.awt.geom.Line2D;
 
 /**
  *
- * @author Joris
+ * @author noisedriver
  */
 public class Line2D implements ILine2D {
     
@@ -35,30 +34,45 @@ public class Line2D implements ILine2D {
     @Override
     public Point2D getIntersection(ILine2D other) {
         
-        double  x1 = this.getOrigin().x,        y1 = this.getOrigin().y,
-                x2 = this.getDisplacement().x,  y2 = this.getDisplacement().y,
-                // second line...
-                x3 = other.getOrigin().x,       y3 = other.getOrigin().y,
-                x4 = other.getDisplacement().x, y4 = other.getDisplacement().y;
+        double a, b, c, d;
         
-        if (x2 == x1)
-            if (y2 == y1) return this.origin;
-            else return new Point2D();
+        // b = y  <--> cx + d = y
+        if (this.displacement.x == 0) {
+            return other.getPointForY(this.getOrigin().y);
+        }
+        
+        if (other.getDisplacement().x == 0) {
+            return this.getPointForY(other.getOrigin().y);
+        }
         
         // slope
-        double a = (y2 - y1) / (x2 - x1);
-        double b = 0;
+        a = this.displacement.y / this.displacement.x;
+        b = this.getPointForX(0).y;
         
-        double c = (y2 - y1) / (x2 - x1);
-        double d = 0;
+        c = other.getDisplacement().y / other.getDisplacement().x;
+        d = other.getPointForX(0).y;
+        
+        if (a == c) {
+            if (b == d) return new Point2D(0, b);
+            else return null;
+        }
         
         // ax + b = y  <--> cx + d = y
-        // x' = (d-b)/(a-c); y' = c(x') + d
-        double x = (d - b) / (a - c);
+        //
+        //      ax + b = cx + d
+        // <=>
+        //      (a - c)x = b + d
+        // <=>
+        //      x = (b + d) / (a - c)
+        // ==>
+        //      y = a (b + d) / (a - c) + b
+        //      y = c (b + d) / (a - c) + d
+        //
+        // x' = (d+b)/(a-c); y' = c(x') + d
+        double x = (d + b) / (a - c);
         double y = a * x + b;
         
-        //return new Point2D(x,y);
-        throw new UnsupportedOperationException("Not supported yet.");
+        return new Point2D(x,y);
     }
     
     @Override
@@ -83,11 +97,11 @@ public class Line2D implements ILine2D {
         
         //       |    /     x = c
         //  (0,d)|   /        |
-        //  -----|--/-------------------- y = d
+        //    ---|--/-------------------- y = d
         //       | /          |
         //       |/y=ax+b     |
         //       |            |
-        //    --/+-----------------------------
+        //  ----/+-----------------------------
         //     / |(0,0)       |(x,0)
         //    /  |            |
         
@@ -117,7 +131,7 @@ public class Line2D implements ILine2D {
 
     @Override
     public Position relativePosition(Point2D p0) {
-        
+        // https://stackoverflow.com/questions/22668659/calculate-on-which-side-of-a-line-a-point-is
         double  x0 = origin.x, y0 = origin.y,
                 x1 = origin.x + displacement.x, y1 = origin.y + displacement.y,
                 x2 = p0.x, y2 = p0.y;
@@ -127,5 +141,42 @@ public class Line2D implements ILine2D {
         if (value > 0) return Position.LEFT;
         if (value < 0) return Position.RIGHT;
         return Position.HIT;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        //hash = 17 * hash + Objects.hashCode(this.origin);
+        // TODO : use normalized origin...
+        hash = 17 * hash + Objects.hashCode(this.displacement);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Line2D other = (Line2D) obj;
+        if (!Objects.equals(this.displacement, other.displacement)) {
+            return false;
+        }
+        
+        // If two different points yield the same value, the lines are the same!
+        Point2D p_a1 = this.origin;
+        Point2D p_a2 = new Point2D(this.origin.x + this.displacement.x, this.origin.y + this.displacement.y);
+        
+        Point2D p_b1 = this.getPointForX(this.origin.x);
+        Point2D p_b2 = this.getPointForX(this.origin.x + this.displacement.x);
+        
+        // TODO : edge cases where one or more points are NULL...
+        
+        return (p_a1.equals(p_b1)) && (p_a2.equals(p_b2));
     }
 }
