@@ -49,13 +49,22 @@ public class ConvexPolygon implements Iterable<Point2D> {
         return this.points.iterator();
     }
     
+    /**
+     * @param index
+     * @return 
+     */
+    public Point2D getPoint(int index) {
+        int i = index % this.points.size(); // circular...
+        return this.points.get(i);
+    }
+    
     public List<LineSegment2D> getEdges() {
         List<LineSegment2D> edges = new LinkedList<>();
         int i = 0, j = 1;
         for (; i < this.points.size() - 1; i++, j++) {
             edges.add(new LineSegment2D(this.points.get(i), this.points.get(j)));
         }
-        edges.add(new LineSegment2D(this.points.get(0), this.points.get(j)));
+        edges.add(new LineSegment2D(this.points.get(i), this.points.get(0)));
         return edges;
     }
     
@@ -66,14 +75,20 @@ public class ConvexPolygon implements Iterable<Point2D> {
      * Adding a new point, this point cannot be inside the convex of the previous
      * convex polygon.
      * 
+     * A polygon that is "hit" but not "cut" in two halves, returns null.
+     * 
      * @param line
      * @return 
      */
-    public Area split(ILine2D line) {
-        Area a = null;
+    public ConvexPolygon split(ILine2D line) {
+        ConvexPolygon c = null;
         for (LineSegment2D edge : getEdges()) {
-            
+            throw new UnsupportedOperationException("Not supported yet.");
         }
-        return a;
+        return c;
+    }
+
+    public boolean intersects(ILine2D line) {
+        return getEdges().stream().anyMatch((edge) -> (edge.getIntersection(line) != null));
     }
 }

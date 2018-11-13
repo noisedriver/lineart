@@ -16,7 +16,14 @@ public class Line2D implements ILine2D {
     
     public Line2D(Point2D displacement, Point2D origin) {
         this.displacement = displacement;
-        this.origin = origin;
+        if (displacement.x != 0) {
+            // move so that x = 0 if displacement_x != 0
+            double b = origin.y + displacement.y / displacement.x * origin.x;
+            this.origin = new Point2D(0, b);
+        } else {
+            // can choose any y-value...
+            this.origin = new Point2D(origin.x,0);
+        }
     }
     
     public Line2D(Point2D displacement) {
@@ -61,11 +68,64 @@ public class Line2D implements ILine2D {
     
     @Override
     public Point2D getOrigin() {
+        // TODO : always with reference to (0,b) ~ y=ax+b or (c,0) ~ x = c
         return this.origin;
     }
     
     @Override
     public Point2D getDisplacement() {
+        // TODO : normalize?
         return this.displacement;
+    }
+
+    @Override
+    public Point2D getPointForX(double x) {
+        
+        //       |    /     x = c
+        //  (0,d)|   /        |
+        //  -----|--/-------------------- y = d
+        //       | /          |
+        //       |/y=ax+b     |
+        //       |            |
+        //    --/+-----------------------------
+        //     / |(0,0)       |(x,0)
+        //    /  |            |
+        
+        if (this.displacement.x == 0) // any Y value if origin.x == x...
+            return (this.origin.x == x) ? new Point2D(x,0) : null;
+        
+        if (this.displacement.y == 0)
+            return new Point2D(x, this.origin.y);
+        
+        double a = displacement.y/displacement.x;
+        double y = a * x + origin.y;
+        return new Point2D(x, y);
+    }
+
+    @Override
+    public Point2D getPointForY(double y) {
+        if (this.displacement.x == 0) // any Y value if origin.x == x...
+            return new Point2D(this.origin.x, y);
+        
+        if (this.displacement.y == 0)
+            return (this.origin.y == y) ? new Point2D(0,y) : null;
+        
+        double a = displacement.y/displacement.x;
+        double x = origin.x + y / a;
+        return new Point2D(x, y);
+    }
+
+    @Override
+    public Position relativePosition(Point2D p0) {
+        
+        double  x0 = origin.x, y0 = origin.y,
+                x1 = origin.x + displacement.x, y1 = origin.y + displacement.y,
+                x2 = p0.x, y2 = p0.y;
+        
+        double value = (x1 - x0) * (y2 - y0) - (x2 - x0) * (y1 - y0);
+        
+        if (value > 0) return Position.LEFT;
+        if (value < 0) return Position.RIGHT;
+        return Position.HIT;
     }
 }

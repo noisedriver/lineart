@@ -5,7 +5,7 @@ import java.util.LinkedList;
 
 /**
  *
- * @author Joris
+ * @author noisedriver
  */
 public class Canvas {
     
@@ -33,55 +33,71 @@ public class Canvas {
         return new Rectangle(this.width, this.height, new Point2D());
     }
     
+    // determine all the areas on one side of the boundary, and all areas on
+    // the other side. Then determine all the areas that are hit by the line
+    // and divide the areas accordingly, adding each side of a split to the
+    // appropriate list of areas.
+    // Finally swap the coloring type of each area in one one of the two
+    // lists...
     public void addLine(ILine2D line) {
         if (! lineWithinBounds(line)) return;
         
-        List<Area> hits  = new LinkedList<>();
-        List<Area> side1 = new LinkedList<>();
-        List<Area> side2 = new LinkedList<>();
-        
-        // determine all the areas on one side of the boundary, and all areas on
-        // the other side. Then determine all the areas that are hit by the line
-        // and divide the areas accordingly, adding each side of a split to the
-        // appropriate list of areas.
-        // Finally swap the coloring type of each area in one one of the two
-        // lists...
-        
-        
+        List<Area> left  = new LinkedList<>();
+        List<Area> right = new LinkedList<>();
         
         this.areas.stream().forEach((a) -> {
-            
-            // 1. left of, right of, or on the boundary?
-            if (a.isHit(line))
-                hits.add(a);
-            else if (a.isOnSide1(line))
-                side1.add(a);
-            else
-                side2.add(a);
-            
-            // do same for split areas...
-            //Area b = a.split(line);
-            //areas.add(a);
-            //if (b != null) areas.add(b);
+            splitAreas(a, line, left, right);
         });
         
-        assert(hits.isEmpty());
-        // swap all colours for bucket 2...
-        side2.stream().forEach((a) -> {
+        // swap all colours for the areas in the right bucket...
+        right.stream().forEach((a) -> {
             a.setColoring(a.getColoring() == Coloring.VERTICAL ? Coloring.HORIZONTAL : Coloring.VERTICAL);
         });
         
         // Update areas...
         this.areas.clear();
-        this.areas.addAll(side1);
-        this.areas.addAll(side2);
+        this.areas.addAll(left);
+        this.areas.addAll(right);
+    }
+    
+    /**
+     * 
+     * @param area
+     * @param line
+     * @param left
+     * @param right 
+     */
+    private static void splitAreas(Area area, ILine2D line, List<Area> left, List<Area> right) {
+        // 1. left of, right of, or on the boundary?
+        Position p = area.relativePosition(line);
+        switch (p) {
+            case HIT:
+                // Recursively split areas...
+                Area b = area.split(line);
+                if (b != null) {
+                    Canvas.splitAreas(area, line, left, right);
+                    Canvas.splitAreas(b, line, left, right);
+                } else {
+                    // Add by default to left if the area is "hit" but not "split"
+                    left.add(area);
+                }
+                break;
+            case LEFT:
+                left.add(area);
+                break;
+            case RIGHT:
+                right.add(area);
+                break;
+            default:
+                break;
+        }
     }
     
     /**
      * @param line
      * @return 
      */
-    private boolean lineWithinBounds(ILine2D line) {
+    private boolean lineWithinBounds(ILine2D line) { // TODO...
         
         /*Rectangle bounds = getBounds();
         

@@ -10,6 +10,7 @@ public class LineSegment2D {
     private final Point2D point2;
     
     public LineSegment2D(Point2D point1, Point2D point2) {
+        // TODO : assert ordering point1 < point2
         this.point1 = point1;
         this.point2 = point2;
     }
@@ -23,12 +24,13 @@ public class LineSegment2D {
     }
     
     public Rectangle getBoundingBox() {
+        // note : no area if colinear...
         return new Rectangle(this.point2.x - this.point1.x, this.point2.y - this.point1.y, point1);
     }
     
     // https://stackoverflow.com/questions/16314069/calculation-of-intersections-between-line-segments
-    public Point2D getIntersection(LineSegment2D line) {
-        Point2D p1  = line.point1, p2  = line.point2, _p1 = this.point1, _p2 = this.point2;
+    public Point2D getIntersection(LineSegment2D segment) {
+        Point2D p1  = segment.point1, p2  = segment.point2, _p1 = this.point1, _p2 = this.point2;
         double  x1 =  p1.x, y1 =  p1.y,
                 x2 =  p2.x, y2 =  p2.y,
                 x3 = _p1.x, y3 = _p1.y,
@@ -47,5 +49,17 @@ public class LineSegment2D {
         return null;
         //if (getBoundingBox().contains(p)) return p;
         //return p;
+    }
+
+    public Point2D getIntersection(ILine2D line) {
+        // recreate the sgement as a line, solve the equation and check if the
+        // solution is inside the bounding box of the segment.
+        ILine2D temp = this.asLine();
+        Point2D p = line.getIntersection(temp);
+        return this.getBoundingBox().contains(p) ? p : null;
+    }
+    
+    public ILine2D asLine() {
+        return new Line2D(this.point1, new Point2D(this.point2.x - this.point1.x, this.point2.y - this.point1.y));
     }
 }

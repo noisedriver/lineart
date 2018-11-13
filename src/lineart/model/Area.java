@@ -1,10 +1,5 @@
 package lineart.model;
 
-//import java.awt.Polygon;
-//import java.awt.geom.Rectangle2D;
-import java.util.LinkedList;
-import java.util.List;
-
 /**
  *
  * @author Joris
@@ -17,14 +12,13 @@ public class Area {
     //private List<Area> neighbours;
     private Coloring coloring;
 
-    public Area(Coloring coloring, Point2D... points) {
-        this.convex = new ConvexPolygon(points);
+    public Area(Coloring coloring, ConvexPolygon polygon) {
+        this.convex = polygon;
         this.coloring = coloring;
     }
     
-    private static Coloring swapColoring(Coloring coloring) {
-        return coloring == Coloring.HORIZONTAL ?
-            Coloring.VERTICAL : Coloring.HORIZONTAL;
+    public Area(Coloring coloring, Point2D... points) {
+        this(coloring, new ConvexPolygon(points));
     }
     
     public void setColoring(Coloring coloring) {
@@ -46,17 +40,23 @@ public class Area {
      * @return 
      */
     public Area split(ILine2D line) {
-        
-        Coloring c = swapColoring(this.coloring);
-        
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-    
-    public boolean isHit(ILine2D line) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        ConvexPolygon polygon = this.convex.split(line);
+        return (polygon != null) ? new Area(this.coloring, polygon) : null;
     }
 
-    public boolean isOnSide1(ILine2D line) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    /**
+     * Verify if the area is left of clockwise
+     * @see 
+     * @param line
+     * @return 
+     */
+    public Position relativePosition(ILine2D line) {
+        if (this.convex.intersects(line))
+            return Position.HIT;
+        Position p = Position.LEFT;
+        // We only need to check for 1 point, as we have already ruled out that
+        // the line intersects with the area...
+        Point2D p0 = this.convex.getPoint(0);
+        return line.relativePosition(p0);
     }
 }
