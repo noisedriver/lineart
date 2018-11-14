@@ -3,7 +3,7 @@ package lineart.model;
 import java.util.Objects;
 
 /**
- *
+ * A line segment with specified start and end points.
  * @author noisedriver
  */
 public class LineSegment2D {

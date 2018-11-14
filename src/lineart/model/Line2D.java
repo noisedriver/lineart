@@ -4,7 +4,8 @@ import java.util.Objects;
 
 
 /**
- *
+ * A line in a 2D space with displacement and one Point on this line as
+ * so-called origin.
  * @author noisedriver
  */
 public class Line2D implements ILine2D {

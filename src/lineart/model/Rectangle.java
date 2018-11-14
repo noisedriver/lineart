@@ -3,8 +3,9 @@ package lineart.model;
 import java.util.Objects;
 
 /**
- *
- * @author Joris
+ * Rectangle class with width, length, and origin point (lowest, left point).
+ * 
+ * @author noisedriver
  */
 public class Rectangle /*implements IPolygon*/ {
     
@@ -42,7 +43,6 @@ public class Rectangle /*implements IPolygon*/ {
         y1 = this.origin.y,
         x2 = this.origin.x + this.width,
         y2 = this.origin.y + this.height; // diagonal
-        boolean result = false;
         
         // TODO : make sure bounding box isn't inside-out?
         if (x1 <= x2) {

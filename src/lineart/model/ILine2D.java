@@ -18,7 +18,7 @@ package lineart.model;
  * </p>
  * @see https://en.wikipedia.org/wiki/Linear_equation
  * 
- * @author Joris
+ * @author noisedriver
  */
 public interface ILine2D {
     

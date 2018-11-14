@@ -1,8 +1,8 @@
 package lineart.model;
 
 /**
- *
- * @author Joris
+ * Coloring type, either horizontal or vertical.
+ * @author noisedriver
  */
 public enum Coloring {
     VERTICAL, HORIZONTAL;

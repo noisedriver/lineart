@@ -1,8 +1,8 @@
 package lineart.model;
 
 /**
- *
- * @author Joris
+ * 2D Point class. To be considered as value container for x and y coordinates.
+ * @author noisedriver
  */
 public class Point2D {
     

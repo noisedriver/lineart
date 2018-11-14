@@ -4,7 +4,8 @@ import java.util.List;
 import java.util.LinkedList;
 
 /**
- *
+ * A class that maintains the areas created by splitting the initial area by
+ * a number of lines.
  * @author noisedriver
  */
 public class Canvas {

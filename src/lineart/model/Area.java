@@ -1,15 +1,12 @@
 package lineart.model;
 
 /**
- *
+ * An a area is a convex polygon with a specific coloring style.
  * @author noisedriver
  */
 public class Area {
     
     private final ConvexPolygon convex;
-    
-    // how correctly transfer/maintain neighbours? this goes on recursively as well...
-    //private List<Area> neighbours;
     private Coloring coloring;
 
     public Area(Coloring coloring, ConvexPolygon polygon) {
