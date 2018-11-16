@@ -58,7 +58,10 @@ public class LineSegment2D {
         // solution is inside the bounding box of the segment.
         ILine2D temp = this.asLine();
         Point2D p = line.getIntersection(temp);
-        return this.getBoundingBox().contains(p) ? p : null;
+        if (p != null)
+            return this.getBoundingBox().contains(p) ? p : null;
+        else
+            return null;
     }
     
     public ILine2D asLine() {

@@ -15,11 +15,14 @@ public class AreaTest {
     @Test
     public void testSetColoring() {
         System.out.println("setColoring");
-        Coloring coloring = null;
-        Area instance = null;
-        instance.setColoring(coloring);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        Area instance = new Area(Coloring.VERTICAL,
+                new Point2D(0, 0), new Point2D(1, 0), new Point2D(0, 1));
+        instance.setColoring(Coloring.HORIZONTAL);
+        
+        Coloring expResult = Coloring.HORIZONTAL;
+        Coloring result = instance.getColoring();
+        assertEquals(expResult, result);
     }
 
     /**
@@ -28,27 +31,11 @@ public class AreaTest {
     @Test
     public void testGetColoring() {
         System.out.println("getColoring");
-        Area instance = null;
-        Coloring expResult = null;
+        Area instance = new Area(Coloring.VERTICAL,
+                new Point2D(0, 0), new Point2D(1, 0), new Point2D(0, 1));
+        Coloring expResult = Coloring.VERTICAL;
         Coloring result = instance.getColoring();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of contains method, of class Area.
-     */
-    @Test
-    public void testContains() {
-        System.out.println("contains");
-        Point2D p = null;
-        Area instance = null;
-        boolean expResult = false;
-        boolean result = instance.contains(p);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -57,13 +44,17 @@ public class AreaTest {
     @Test
     public void testSplit() {
         System.out.println("split");
-        ILine2D line = null;
-        Area instance = null;
-        Area expResult = null;
+        
+        Area instance = new Area(Coloring.VERTICAL,
+                new Point2D(0, 0), new Point2D(1, 0), new Point2D(1, 1));
+        
+        ILine2D line = new Line2D(new Point2D(1, 1), new Point2D(0, -0.5));
+        
+        Area expResult = new Area(Coloring.VERTICAL,
+                new Point2D(0.5, 0), new Point2D(1, 0), new Point2D(1, 0.5));
+        
         Area result = instance.split(line);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -72,13 +63,16 @@ public class AreaTest {
     @Test
     public void testRelativePosition() {
         System.out.println("relativePosition");
-        ILine2D line = null;
-        Area instance = null;
-        Position expResult = null;
+        
+        
+        Area instance = new Area(Coloring.VERTICAL,
+                new Point2D(0, 0), new Point2D(1, 0), new Point2D(1, 1));
+        
+        ILine2D line = new Line2D(new Point2D(1, 1), new Point2D(0, -0.5));
+        Position expResult = Position.HIT;
         Position result = instance.relativePosition(line);
+        
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
     
 }
