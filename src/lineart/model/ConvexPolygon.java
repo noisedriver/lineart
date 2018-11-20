@@ -8,6 +8,8 @@ import java.util.Objects;
 
 /**
  * A convex hull N-polygon with N > 2.
+ * 
+ * @see https://algs4.cs.princeton.edu/91primitives/
  * @author noisedriver
  */
 public class ConvexPolygon implements Iterable<Point2D> {

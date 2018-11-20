@@ -52,6 +52,7 @@ public interface ILine2D {
      * 
      * if (this.getSlope() == line.getSlope()) result == null
      * 
+     * @see https://martin-thoma.com/how-to-check-if-two-line-segments-intersect/
      * @param line
      * @return 
      */
