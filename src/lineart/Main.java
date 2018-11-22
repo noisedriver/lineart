@@ -23,11 +23,16 @@ public class Main {
     public static void main(String[] args) {
         
         final int WIDTH = 1024, HEIGHT = 1024, LINE_WIDTH = 5;
+        final String outputFilename = "output.jpg";
         
         Canvas canvas = new Canvas(WIDTH, HEIGHT, LINE_WIDTH);
+        
+        // TODO : add to try-catch block?
+        // TODO : operation for interactive editor
         canvas.addLine(new Line2D(new Point2D(50, 100)));
         
         try {
+            canvas.addLine(new Line2D(new Point2D(50, 100)));
             BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_BYTE_INDEXED);
             
             for(int i = 0; i < WIDTH; i++) {
@@ -38,7 +43,7 @@ public class Main {
                 }
             }
             
-            File output = new File("GrayScale.jpg");
+            File output = new File(outputFilename);
             ImageIO.write(image, "jpg", output);
         } catch(Exception e) {
             e.printStackTrace();

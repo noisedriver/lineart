@@ -1,5 +1,7 @@
 package lineart.model;
 
+import java.util.Objects;
+
 /**
  * An a area is a convex polygon with a specific coloring style.
  * @author noisedriver
@@ -7,7 +9,7 @@ package lineart.model;
 public class Area {
     
     private final ConvexPolygon convex;
-    private Coloring coloring;
+    private Coloring coloring; // colouring can change
 
     public Area(Coloring coloring, ConvexPolygon polygon) {
         this.convex = polygon;
@@ -54,5 +56,37 @@ public class Area {
         // the line intersects with the area...
         Point2D p0 = this.convex.getPoint(0);
         return line.relativePosition(p0);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 37 * hash + Objects.hashCode(this.convex);
+        hash = 37 * hash + Objects.hashCode(this.coloring);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Area other = (Area) obj;
+        if (!Objects.equals(this.convex, other.convex)) {
+            return false;
+        }
+        return this.coloring == other.coloring;
+    }
+
+    @Override
+    public String toString() {
+        return "Area{" + "convex=" + convex + ", coloring=" + coloring + '}';
+    }
+    
+    public void flipColoring() {
+        this.setColoring(this.getColoring() == Coloring.VERTICAL ? Coloring.HORIZONTAL : Coloring.VERTICAL);
     }
 }

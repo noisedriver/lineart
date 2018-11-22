@@ -14,7 +14,7 @@ public class Line2DTest {
      */
     @Test
     public void testGetIntersection() {
-        System.out.println("getIntersection");
+        System.out.println("getIntersection 1 ");
         
         Line2D instance = new Line2D(new Point2D(1, 1), new Point2D(0, 0));
         
@@ -42,6 +42,21 @@ public class Line2DTest {
         //Point2D result4 = instance.getIntersection(other4);
         //assertEquals(expResult4, result4);
         //assertEquals(instance, other4);
+    }
+    
+    /**
+     * Test of getIntersection method, of class Line2D.
+     */
+    @Test
+    public void testGetIntersection2() {
+        System.out.println("getIntersection 2 ");
+        // CASE 5
+        ILine2D instance5 = new Line2D(new Point2D(0, 1), new Point2D(1, 0));
+        ILine2D other5 = new Line2D(new Point2D(1, 1), new Point2D(0, -0.5));
+        Point2D expResult5 = new Point2D(1,0.5);
+        Point2D result5 = instance5.getIntersection(other5);
+        assertEquals(expResult5, result5);
+        //assertEquals(instance5, other5);
     }
 
     /**

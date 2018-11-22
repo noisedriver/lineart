@@ -95,4 +95,12 @@ public class Rectangle /*implements IPolygon*/ {
     public String toString() {
         return "Rectangle{" + "width=" + width + ", height=" + height + ", origin=" + origin + '}';
     }
+    
+    public Point2D getBottomLeft() {
+        return this.origin;
+    }
+    
+    public Point2D getTopRight() {
+        return new Point2D(this.origin.x + this.width, this.origin.y + this.height);
+    }
 }

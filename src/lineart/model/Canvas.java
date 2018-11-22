@@ -52,7 +52,7 @@ public class Canvas {
         
         // swap all colours for the areas in the right bucket...
         right.stream().forEach((a) -> {
-            a.setColoring(a.getColoring() == Coloring.VERTICAL ? Coloring.HORIZONTAL : Coloring.VERTICAL);
+            a.flipColoring();
         });
         
         // Update areas...

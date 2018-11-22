@@ -16,6 +16,7 @@ public class Line2D implements ILine2D {
     
     public Line2D(Point2D displacement, Point2D origin) {
         this.displacement = displacement;
+        /*
         if (displacement.x != 0) {
             // move so that x = 0 if displacement_x != 0
             double b = origin.y + displacement.y / displacement.x * origin.x;
@@ -24,6 +25,8 @@ public class Line2D implements ILine2D {
             // can choose any y-value...
             this.origin = new Point2D(origin.x,0);
         }
+        */
+        this.origin = origin;
     }
     
     public Line2D(Point2D displacement) {
@@ -39,11 +42,11 @@ public class Line2D implements ILine2D {
         
         // b = y  <--> cx + d = y
         if (this.displacement.x == 0) {
-            return other.getPointForY(this.getOrigin().y);
+            return other.getPointForX(this.getOrigin().x);
         }
         
         if (other.getDisplacement().x == 0) {
-            return this.getPointForY(other.getOrigin().y);
+            return this.getPointForX(other.getOrigin().x);
         }
         
         // slope

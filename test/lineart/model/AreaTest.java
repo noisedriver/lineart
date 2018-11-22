@@ -42,8 +42,8 @@ public class AreaTest {
      * Test of split method, of class Area.
      */
     @Test
-    public void testSplit() {
-        System.out.println("split");
+    public void testSplit1() {
+        System.out.println("split1");
         
         Area instance = new Area(Coloring.VERTICAL,
                 new Point2D(0, 0), new Point2D(1, 0), new Point2D(1, 1));
@@ -55,6 +55,36 @@ public class AreaTest {
         
         Area result = instance.split(line);
         assertEquals(expResult, result);
+        
+        Area expResult2 = new Area(Coloring.VERTICAL,
+                new Point2D(), new Point2D(0.5, 0), new Point2D(1, 0.5), new Point2D(1, 1));
+        assertEquals(expResult2, instance);
+    }
+    
+    @Test
+    public void testSplit2() {
+        //if (true) return;
+        System.out.println("split2");
+        
+        // INPUT :
+        Area instance = new Area(Coloring.VERTICAL,
+                new Point2D(0, 0), new Point2D(1, -1), new Point2D(1, 0),
+                new Point2D(1, 1), new Point2D(0, 1));
+        ILine2D line = new Line2D(new Point2D(1, 1), new Point2D(0, -0.5));
+        
+        // EXECUTE :
+        Area result = instance.split(line);
+        
+        // RESULTS :
+        Area expResult = new Area(Coloring.VERTICAL,
+                new Point2D(-0.5, -0.5), new Point2D(-1, -1),
+                new Point2D(1, 0), new Point2D(0, 0.5));
+        assertEquals(expResult, result);
+        
+        /*Area expResult2 = new Area(Coloring.VERTICAL,
+                new Point2D(-0.5, -0.5), new Point2D(-1, -1),
+                new Point2D(1, 0), new Point2D(0, 0.5));
+        assertEquals(expResult2, instance);*/
     }
 
     /**
@@ -75,4 +105,22 @@ public class AreaTest {
         assertEquals(expResult, result);
     }
     
+    /**
+     * Test of relativePosition method, of class Area.
+     */
+    @Test
+    public void testFlipColoring() {
+        System.out.println("flipColoring");
+        
+        
+        Area instance = new Area(Coloring.VERTICAL,
+                new Point2D(0, 0), new Point2D(1, 0), new Point2D(1, 1));
+        
+        Coloring expResult = Coloring.HORIZONTAL;
+        
+        instance.flipColoring();
+        Coloring result = instance.getColoring();
+        
+        assertEquals(expResult, result);
+    }
 }
