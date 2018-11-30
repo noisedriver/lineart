@@ -57,8 +57,15 @@ public class Line2D implements ILine2D {
         d = other.getPointForX(0).y;
         
         if (a == c) {
-            if (b == d) return new Point2D(0, b);
-            else return null;
+            if (b == d)
+                // in theory we could return any point (x,ax+b)
+                // but that would introduce additional complexity
+                // a better way is perhaps to throw an exception:
+                //  1. NoIntersectionException
+                //  2. InfiniteIntersectionException
+                return null;
+            else
+                return null;
         }
         
         // ax + b = y  <--> cx + d = y

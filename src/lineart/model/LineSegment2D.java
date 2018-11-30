@@ -65,7 +65,15 @@ public class LineSegment2D {
     }
     
     public ILine2D asLine() {
-        return new Line2D(new Point2D(this.point2.x - this.point1.x, this.point2.y - this.point1.y), this.point1);
+        double delta_x = this.point2.x - this.point1.x;
+        double delta_y = this.point2.y - this.point1.y;
+        
+        // always move as positive X
+        // TODO : normalize if X != 0?
+        double factor = 1;
+        if (delta_x < 0) factor = -1;
+        
+        return new Line2D(new Point2D(delta_x * factor, delta_y * factor), this.point1);
     }
 
     @Override

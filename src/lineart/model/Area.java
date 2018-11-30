@@ -75,7 +75,7 @@ public class Area {
             return false;
         }
         final Area other = (Area) obj;
-        if (!Objects.equals(this.convex, other.convex)) {
+        if (!this.convex.equals(other.convex)) {
             return false;
         }
         return this.coloring == other.coloring;

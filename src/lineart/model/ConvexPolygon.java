@@ -180,8 +180,8 @@ public class ConvexPolygon implements Iterable<Point2D> {
         }
         final ConvexPolygon other = (ConvexPolygon) obj;
         for (Point2D p : this)
-            if (other.hasPoint(p)) return true;
-        return false;
+            if (! other.hasPoint(p)) return false;
+        return true;
     }
 
     public boolean hasPoint(Point2D point) {
@@ -189,6 +189,10 @@ public class ConvexPolygon implements Iterable<Point2D> {
             if (p.equals(point)) return true;
         return false;
     }
-    
+
+    @Override
+    public String toString() {
+        return "ConvexPolygon{" + "points=" + points + '}';
+    }
     
 }

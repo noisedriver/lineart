@@ -29,7 +29,7 @@ public class Main {
         
         // TODO : add to try-catch block?
         // TODO : operation for interactive editor
-        canvas.addLine(new Line2D(new Point2D(50, 100)));
+        //canvas.addLine(new Line2D(new Point2D(50, 100)));
         
         try {
             canvas.addLine(new Line2D(new Point2D(50, 100)));

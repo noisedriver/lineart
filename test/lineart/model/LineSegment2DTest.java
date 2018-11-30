@@ -102,12 +102,20 @@ public class LineSegment2DTest {
     public void testAsLine() {
         System.out.println("asLine");
         
-        LineSegment2D instance = new LineSegment2D(new Point2D(), new Point2D(1,1));
+        // CASE 1
+        LineSegment2D instance1 = new LineSegment2D(new Point2D(0,0), new Point2D(1,1));
+        ILine2D result1 = instance1.asLine();
         
-        ILine2D result = instance.asLine();
+        assertEquals(new Point2D(1,1), result1.getDisplacement());
+        assertEquals(new Point2D(0,0), result1.getPointForX(0));
         
-        assertEquals(new Point2D(1,1), result.getDisplacement());
-        assertEquals(new Point2D(0,0), result.getPointForX(0));
+        
+        // CASE 2
+        LineSegment2D instance2 = new LineSegment2D(new Point2D(2, 0), new Point2D(1,1));
+        ILine2D result2 = instance2.asLine();
+        
+        assertEquals(new Point2D(1,-1), result2.getDisplacement());
+        assertEquals(new Point2D(2,0), result2.getPointForX(0));
     }
     
 }
