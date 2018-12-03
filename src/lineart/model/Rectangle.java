@@ -21,6 +21,13 @@ public class Rectangle /*implements IPolygon*/ {
         this(width, height, new Point2D());
     }
     
+    /**
+     * Note that negative values for width and height are transformed to
+     * absolute values.
+     * @param width
+     * @param height
+     * @param point 
+     */
     public Rectangle(double width, double height, Point2D point) {
         this.width  = Math.abs(width);
         this.height = Math.abs(height);
@@ -85,10 +92,7 @@ public class Rectangle /*implements IPolygon*/ {
         if (Double.doubleToLongBits(this.height) != Double.doubleToLongBits(other.height)) {
             return false;
         }
-        if (!Objects.equals(this.origin, other.origin)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.origin, other.origin);
     }
 
     @Override

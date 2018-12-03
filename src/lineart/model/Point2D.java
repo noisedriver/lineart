@@ -41,10 +41,7 @@ public class Point2D {
         if (Double.doubleToLongBits(this.x) != Double.doubleToLongBits(other.x)) {
             return false;
         }
-        if (Double.doubleToLongBits(this.y) != Double.doubleToLongBits(other.y)) {
-            return false;
-        }
-        return true;
+        return Double.doubleToLongBits(this.y) == Double.doubleToLongBits(other.y);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package lineart.model;
 
+import lineart.model.exception.EquivalentLineException;
+import lineart.model.exception.NoIntersectionException;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -78,20 +80,24 @@ public class LineSegment2DTest {
         System.out.println("getIntersection(ILine2D)");
         
         
-        {
+        try {
             LineSegment2D instance = new LineSegment2D(new Point2D(0,0), new Point2D(1,1));
             ILine2D line = new Line2D(new Point2D(1,0), new Point2D(0,0.5));
             Point2D expResult = new Point2D(0.5, 0.5);
             Point2D result = instance.getIntersection(line);
             assertEquals(expResult, result);
+        } catch(NoIntersectionException | EquivalentLineException e) {
+            fail();
         }
         
-        {
+        try {
             LineSegment2D instance = new LineSegment2D(new Point2D(2,2), new Point2D(-2,2));
             ILine2D line = new Line2D(new Point2D(1, 2), new Point2D(0, 0));
             Point2D expResult = new Point2D(1, 2);
             Point2D result = instance.getIntersection(line);
             assertEquals(expResult, result);
+        } catch(NoIntersectionException | EquivalentLineException e) {
+            fail();
         }
     }
 
@@ -115,7 +121,7 @@ public class LineSegment2DTest {
         ILine2D result2 = instance2.asLine();
         
         assertEquals(new Point2D(1,-1), result2.getDisplacement());
-        assertEquals(new Point2D(2,0), result2.getPointForX(0));
+        assertEquals(new Point2D(0,2), result2.getPointForX(0));
     }
     
 }

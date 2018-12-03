@@ -1,5 +1,7 @@
 package lineart.model;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.LinkedList;
 
@@ -145,5 +147,9 @@ public class Canvas {
     
     public int getLineWidth() {
         return this.lineWidth;
+    }
+    
+    public Collection<Area> getAreas() {
+        return Collections.unmodifiableCollection(this.areas);
     }
 }

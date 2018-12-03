@@ -77,7 +77,7 @@ public class AreaTest {
         
         // RESULTS :
         Area expResult = new Area(Coloring.VERTICAL,
-                new Point2D(0.25, -0.25), new Point2D(-1, -1),
+                new Point2D(0.25, -0.25), new Point2D(1, -1),
                 new Point2D(2, 0), new Point2D(1.25, 0.75));
         assertEquals(expResult, result);
         
@@ -114,7 +114,6 @@ public class AreaTest {
                 new Point2D(537, 1024), new Point2D(0, 1024));
         assertEquals(expResult2, instance);
     }
-
 
     /**
      * Test of relativePosition method, of class Area.

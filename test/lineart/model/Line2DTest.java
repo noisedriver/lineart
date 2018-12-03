@@ -1,5 +1,7 @@
 package lineart.model;
 
+import lineart.model.exception.EquivalentLineException;
+import lineart.model.exception.NoIntersectionException;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -19,29 +21,54 @@ public class Line2DTest {
         Line2D instance = new Line2D(new Point2D(1, 1), new Point2D(0, 0));
         
         // CASE 1
-        ILine2D other = new Line2D(new Point2D(1, 0.5), new Point2D(0, 4));
-        Point2D expResult = new Point2D(8,8);
-        Point2D result = instance.getIntersection(other); //System.out.println(result.toString());
-        assertEquals(expResult, result);
+        try {
+            ILine2D other = new Line2D(new Point2D(1, 0.5), new Point2D(0, 4));
+            Point2D expResult = new Point2D(8,8);
+            Point2D result = instance.getIntersection(other);
+            //System.out.println(result.toString());
+            assertEquals(expResult, result);
+        } catch(NoIntersectionException | EquivalentLineException e) {
+            fail();
+        }
+        
         
         // CASE 2
-        ILine2D other2 = new Line2D(new Point2D(1, -2), new Point2D(0, 6));
-        Point2D expResult2 = new Point2D(2,2);
-        Point2D result2 = instance.getIntersection(other2); //System.out.println(result.toString());
-        assertEquals(expResult2, result2);
+        try {
+            ILine2D other2 = new Line2D(new Point2D(1, -2), new Point2D(0, 6));
+            Point2D expResult2 = new Point2D(2,2);
+            Point2D result2 = instance.getIntersection(other2); //System.out.println(result.toString());
+            assertEquals(expResult2, result2);
+        } catch(NoIntersectionException | EquivalentLineException e) {
+            fail();
+        }
         
         // CASE 3
-        ILine2D other3 = new Line2D(new Point2D(1, 1), new Point2D(0, 6));
-        Point2D expResult3 = null;
-        Point2D result3 = instance.getIntersection(other3);
-        assertEquals(expResult3, result3);
+        Point2D result3 = null;
+        try {
+            ILine2D other3 = new Line2D(new Point2D(1, 1), new Point2D(0, 6));
+            result3 = instance.getIntersection(other3);
+            result3.toString(); // avoid unused warning
+            fail("intersection found...");
+        } catch(NoIntersectionException e) {
+            Point2D expResult3 = null;
+            assertEquals(expResult3, result3);
+        } catch (EquivalentLineException e) {
+            fail("EquivalentLineException...");
+        }
         
-        // CASE 3
-        //ILine2D other4 = new Line2D(new Point2D(1, 1), new Point2D(100, 100));
-        //Point2D expResult4 = new Point2D(0,0);
-        //Point2D result4 = instance.getIntersection(other4);
-        //assertEquals(expResult4, result4);
-        //assertEquals(instance, other4);
+        // CASE 4
+        Point2D result4 = null;
+        try {
+            ILine2D other4 = new Line2D(new Point2D(1, 1), new Point2D(6, 6));
+            result4 = instance.getIntersection(other4);
+            result4.toString(); // avoid unused warning
+            fail("intersection found...");
+        } catch(NoIntersectionException e) {
+            fail("NoIntersectionException...");
+        } catch(EquivalentLineException e) {
+            Point2D expResult4 = null;
+            assertEquals(expResult4, result4);
+        }
     }
     
     /**
@@ -51,12 +78,16 @@ public class Line2DTest {
     public void testGetIntersection2() {
         System.out.println("getIntersection 2 ");
         // CASE 5
-        ILine2D instance5 = new Line2D(new Point2D(0, 1), new Point2D(1, 0));
-        ILine2D other5 = new Line2D(new Point2D(1, 1), new Point2D(0, -0.5));
-        Point2D expResult5 = new Point2D(1,0.5);
-        Point2D result5 = instance5.getIntersection(other5);
-        assertEquals(expResult5, result5);
-        //assertEquals(instance5, other5);
+        try {
+            ILine2D instance5 = new Line2D(new Point2D(0, 1), new Point2D(1, 0));
+            ILine2D other5 = new Line2D(new Point2D(1, 1), new Point2D(0, -0.5));
+            Point2D expResult5 = new Point2D(1,0.5);
+            Point2D result5 = instance5.getIntersection(other5);
+            assertEquals(expResult5, result5);
+            //assertEquals(instance5, other5);
+        } catch(NoIntersectionException | EquivalentLineException e) {
+            fail();
+        }
     }
 
     /**

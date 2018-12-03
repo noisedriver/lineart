@@ -5,6 +5,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import lineart.model.exception.EquivalentLineException;
+import lineart.model.exception.NoIntersectionException;
 
 /**
  * A convex hull N-polygon with N > 2.
@@ -128,17 +130,16 @@ public class ConvexPolygon implements Iterable<Point2D> {
             else
                 polygon2.add(edge.getPoint1());
             
-            Point2D p = edge.getIntersection(line);
-            if (p != null) {
+            try {
+                Point2D p = edge.getIntersection(line);
                 polygon1_active = !polygon1_active;
                 splits++;
                 polygon1.add(p); // add case for when p == point1 or point2?
                 polygon2.add(p);
-                /*if (polygon1_active) {
-                    polygon1.add(edge.getPoint2());
-                } else {
-                    polygon2.add(edge.getPoint2());
-                }*/
+            } catch (NoIntersectionException e) {
+                System.err.println(e.getClass() + " : no intersection found.");
+            } catch(EquivalentLineException e) {
+                System.err.println(e.getClass() + " : overlap found.");
             }
         }
         
@@ -156,7 +157,16 @@ public class ConvexPolygon implements Iterable<Point2D> {
     }
 
     public boolean intersects(ILine2D line) {
-        return getEdges().stream().anyMatch((edge) -> (edge.getIntersection(line) != null));
+        //return getEdges().stream().anyMatch((edge) -> (edge.getIntersection(line) != null));
+        for (LineSegment2D edge : this.getEdges()) {
+            try {
+                edge.getIntersection(line);
+                return true;
+            } catch (NoIntersectionException | EquivalentLineException e) {
+                // EquivalentLineException --> also return true?
+            }
+        }
+        return false;
     }
 
     @Override

@@ -1,6 +1,8 @@
 package lineart.model;
 
 import java.util.Objects;
+import lineart.model.exception.EquivalentLineException;
+import lineart.model.exception.NoIntersectionException;
 
 /**
  * A line segment with specified start and end points.
@@ -53,15 +55,21 @@ public class LineSegment2D {
         //return p;
     }
 
-    public Point2D getIntersection(ILine2D line) {
+    /**
+     * @param line
+     * @return
+     * @throws NoIntersectionException
+     * @throws EquivalentLineException 
+     */
+    public Point2D getIntersection(ILine2D line) throws NoIntersectionException, EquivalentLineException {
         // recreate the sgement as a line, solve the equation and check if the
         // solution is inside the bounding box of the segment.
         ILine2D temp = this.asLine();
         Point2D p = line.getIntersection(temp);
-        if (p != null)
-            return this.getBoundingBox().contains(p) ? p : null;
+        if (p != null && this.getBoundingBox().contains(p))
+            return p;
         else
-            return null;
+            throw new NoIntersectionException();
     }
     
     public ILine2D asLine() {

@@ -1,5 +1,8 @@
 package lineart.model;
 
+import lineart.model.exception.NoIntersectionException;
+import lineart.model.exception.EquivalentLineException;
+
 
 /**
  * <p>
@@ -50,13 +53,19 @@ public interface ILine2D {
      *  <br />  x' = (d-b)/(a-c); y' = c(x') + d
      * </p>
      * 
-     * if (this.getSlope() == line.getSlope()) result == null
+     * if (this.getSlope() == line.getSlope()) {
+     *    result == null
+     *    if (b = d) throw NoIntersectionException
+     *    else       throw EquivalentLineException
+     * }
      * 
+     * @throws lineart.model.exception.NoIntersectionException
+     * @throws lineart.model.exception.EquivalentLineException
      * @see https://martin-thoma.com/how-to-check-if-two-line-segments-intersect/
      * @param line
      * @return 
      */
-    public Point2D getIntersection(ILine2D line);
+    public Point2D getIntersection(ILine2D line) throws NoIntersectionException, EquivalentLineException;
     
     /**
      * 

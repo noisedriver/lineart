@@ -1,6 +1,8 @@
 package lineart.model;
 
 import java.util.Objects;
+import lineart.model.exception.EquivalentLineException;
+import lineart.model.exception.NoIntersectionException;
 
 
 /**
@@ -36,17 +38,21 @@ public class Line2D implements ILine2D {
     }
 
     @Override
-    public Point2D getIntersection(ILine2D other) {
+    public Point2D getIntersection(ILine2D other) throws NoIntersectionException, EquivalentLineException {
         
         double a, b, c, d;
         
         // b = y  <--> cx + d = y
         if (this.displacement.x == 0) {
-            return other.getPointForX(this.getOrigin().x);
+            Point2D p = other.getPointForX(this.getOrigin().x);
+            if (p == null) throw new NoIntersectionException();
+            else return p;
         }
         
         if (other.getDisplacement().x == 0) {
-            return this.getPointForX(other.getOrigin().x);
+            Point2D p = this.getPointForX(other.getOrigin().x);
+            if (p == null) throw new NoIntersectionException();
+            else return p;
         }
         
         // slope
@@ -63,9 +69,9 @@ public class Line2D implements ILine2D {
                 // a better way is perhaps to throw an exception:
                 //  1. NoIntersectionException
                 //  2. InfiniteIntersectionException
-                return null;
+                throw new EquivalentLineException();
             else
-                return null;
+                throw new NoIntersectionException();
         }
         
         // ax + b = y  <--> cx + d = y
@@ -125,7 +131,7 @@ public class Line2D implements ILine2D {
             return new Point2D(x, this.origin.y);
         
         double a = displacement.y/displacement.x;
-        double y = a * x + origin.y;
+        double y = a * (x - origin.x) + origin.y;
         return new Point2D(x, y);
     }
 
